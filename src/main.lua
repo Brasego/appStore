@@ -49,7 +49,7 @@ end
 local function fetchMinecraftRepos()
   -- Encode the query components (spaces become %20, etc.)
   local query = string.format("user:%s+topic:%s", USER, TOPIC)
-  local url = API_ROOT .. "/search/repositories?q=" .. http.urlEncode(query) .. "&per_page=100"
+  local url = API_ROOT .. "/search/repositories?q=" .. query .. "&per_page=100"
   local result, err = getJSON(url)
   if not result then error("GitHub search failed: " .. tostring(err)) end
   -- `items` holds the array of matching repositories
