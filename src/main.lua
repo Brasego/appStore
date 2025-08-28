@@ -10,7 +10,7 @@
 local USER = "Brasego"   -- <<< replace with your GitHub login
 local TOPIC = "Minecraft"             -- the topic/tag you use on GitHub
 local API_ROOT = "https://api.github.com"
-local TOKEN_FILE = "/disk/creds/githubToken"   -- keep this file private!
+local TOKEN_FILE = "/disk/creds/github_token"   -- keep this file private!
 
 -----------------------------------------------------------------
 -- Helper: read the PAT (if you have one)
@@ -22,11 +22,11 @@ local function readToken()
   return token
 end
 
-local GITHUBTOKEN = readToken()
+local GITHUB_TOKEN = readToken()
 
 local function authHeader()
-  if GITHUBTOKEN then
-    return { ["Authorization"] = "token " .. GITHUBTOKEN }
+  if GITHUB_TOKEN then
+    return { ["Authorization"] = "token " .. GITHUB_TOKEN }
   else
     return {}
   end
@@ -49,7 +49,7 @@ end
 local function fetchMinecraftRepos()
   -- Encode the query components (spaces become %20, etc.)
   local query = string.format("user:%s+topic:%s", USER, TOPIC)
-  local url = API_ROOT .. "/search/repositories?q=" .. query .. "&per_page=100"
+  local url = API_ROOT .. "/search/repositories?q=" .. http.urlEncode(query) .. "&per_page=100"
   local result, err = getJSON(url)
   if not result then error("GitHub search failed: " .. tostring(err)) end
   -- `items` holds the array of matching repositories
@@ -109,17 +109,14 @@ local function main()
     return
   end
 
-  
+  while true do
     local repo = chooseRepo(repos)
-    if not repo then
-      print("Exiting.")
-      return
-    end
+    if not repo then break end
     local ok, err = pcall(downloadApp, repo)
     if not ok then print("Error: " .. err) end
     print("\n---\n")
-  
-  print("Burger !")
+  end
+  print("Goodbye!")
 end
 
 -----------------------------------------------------------------
