@@ -106,7 +106,7 @@ local function main()
   local repos = fetchMinecraftRepos()
   if #repos == 0 then
     print("No repositories found with the '" .. TOPIC .. "' topic.")
-    return end
+    return
   end
 
   
@@ -114,9 +114,9 @@ local function main()
   if not repo then print("Exiting.") return end
   local ok, err = pcall(downloadApp, repo)
   if not ok then print("Error: " .. err) end
+  print("Et voilà !")
   print("\n---\n")
   
-  print("Et voilà !")
 end
 
 -----------------------------------------------------------------
