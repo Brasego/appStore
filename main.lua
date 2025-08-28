@@ -7,13 +7,13 @@
 -- ---------------------------------------------------------------
 
 local user = "Brasego"   -- <-- replace with your GitHub user/org
-local apiRoot = "https://api.github.com"
+local APIRoot = "https://api.github.com"
 local tokenFile = "/disk/creds/githubToken"   -- keep this file private!
 
 -- -----------------------------------------------------------------
 -- Helper: read token (if you don’t want a token, just delete the header)
 local function readToken()
-  local f = io.open(TOKEN_FILE, "r")
+  local f = io.open(tokenFile, "r")
   if not f then return nil end
   local token = f:read("*l")
   f:close()
@@ -45,7 +45,7 @@ end
 -- -----------------------------------------------------------------
 -- Step 1 – fetch list of repos for the user
 local function fetchRepos()
-  local url = API_ROOT .. "/users/" .. USER .. "/repos?per_page=100"
+  local url = APIRoot .. "/users/" .. USER .. "/repos?per_page=100"
   local repos, err = getJSON(url)
   if not repos then error("Could not fetch repos: " .. tostring(err)) end
   return repos
