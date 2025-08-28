@@ -106,7 +106,7 @@ local function main()
   local repos = fetchMinecraftRepos()
   if #repos == 0 then
     print("No repositories found with the '" .. TOPIC .. "' topic.")
-    return
+    return end
   end
 
   
