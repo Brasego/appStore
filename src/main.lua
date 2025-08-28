@@ -155,6 +155,21 @@ local function downloadApp(repo)
 end
 
 -----------------------------------------------------------------
+-- Path creator: adds the program to the shell path in usr/bin, creates usr/bin if needed
+local function ensureInPath(appName)
+  local shellPath = shell.path("/")
+  local binDir = "/usr/bin"
+  if not fs.exists(binDir) then
+    fs.makeDir(binDir)
+  end
+  local linkPath = binDir .. "/" .. appName
+  if not fs.exists(linkPath) then
+    fs.link("/apps/" .. appName .. "/src/main.lua", linkPath)
+    print("Added " .. appName .. " to shell path.")
+  end
+
+
+-----------------------------------------------------------------
 -- Main driver
 local function main()
   local repos = fetchMinecraftRepos()
