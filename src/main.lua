@@ -119,7 +119,7 @@ local function main()
     if not ok then print("Error: " .. err) end
     print("\n---\n")
   
-  print("Goodbye!")
+  print("Burger !")
 end
 
 -----------------------------------------------------------------
