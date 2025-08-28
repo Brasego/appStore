@@ -45,7 +45,7 @@ end
 -- -----------------------------------------------------------------
 -- Step 1 – fetch list of repos for the user
 local function fetchRepos()
-  local url = APIRoot .. "/users/" .. USER .. "/repos?per_page=100"
+  local url = APIRoot .. "/users/" .. user .. "/repos?per_page=100"
   local repos, err = getJSON(url)
   if not repos then error("Could not fetch repos: " .. tostring(err)) end
   return repos
@@ -54,7 +54,7 @@ end
 -- -----------------------------------------------------------------
 -- Step 2 – pretty‑print a selectable menu
 local function chooseRepo(repos)
-  print("\n=== Available apps (GitHub: " .. USER .. ") ===")
+  print("\n=== Available apps (GitHub: " .. user .. ") ===")
   for i, r in ipairs(repos) do
     print(string.format("%2d) %s%s", i, r.name,
           r.private and " (private)" or ""))
@@ -78,7 +78,7 @@ local function downloadApp(repo)
   -- Assume the entry point is src/main.lua – you can change this path.
   local rawURL = string.format(
     "https://raw.githubusercontent.com/%s/%s/master/src/main.lua",
-    USER, repo.name)
+    user, repo.name)
 
   print("Downloading " .. repo.name .. " …")
   local resp = http.get(rawURL, authHeader())
