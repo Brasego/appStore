@@ -116,7 +116,7 @@ local function main()
     if not ok then print("Error: " .. err) end
     print("\n---\n")
   end
-  print("Goodbye!")
+  print(" Oyoyo!")
 end
 
 -----------------------------------------------------------------
