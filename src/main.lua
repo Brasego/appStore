@@ -1,3 +1,82 @@
+-- appstore.lua – Minecraft‑topic filtered app manager for ComputerCraft
+-- ---------------------------------------------------------------
+-- Prereqs:
+--   • A GitHub personal access token (PAT) saved in github_token (optional but
+--     strongly recommended – it lifts the 60‑req/hour limit and lets you query
+--     private repos if you ever need them).
+--   • textutils.unserialiseJSON (built‑in from CC 1.80+) or a bundled JSON lib.
+-- ---------------------------------------------------------------
+
+local USER = "Brasego"   -- <<< replace with your GitHub login
+local TOPIC = "Minecraft"             -- the topic/tag you use on GitHub
+local API_ROOT = "https://api.github.com"
+local TOKEN_FILE = "/disk/creds/github_token"   -- keep this file private!
+
+-----------------------------------------------------------------
+-- Helper: read the PAT (if you have one)
+local function readToken()
+  local f = io.open(TOKEN_FILE, "r")
+  if not f then return nil end
+  local token = f:read("*l")
+  f:close()
+  return token
+end
+
+local GITHUB_TOKEN = readToken()
+
+local function authHeader()
+  if GITHUB_TOKEN then
+    return { ["Authorization"] = "token " .. GITHUB_TOKEN }
+  else
+    return {}
+  end
+end
+
+-----------------------------------------------------------------
+-- Helper: generic GET → parsed JSON
+local function getJSON(url)
+  local response = http.get(url, authHeader())
+  if not response then return nil, "HTTP request failed" end
+  local body = response.readAll()
+  response.close()
+  local ok, data = pcall(textutils.unserialiseJSON, body)
+  if not ok then return nil, "JSON parse error" end
+  return data
+end
+
+-----------------------------------------------------------------
+-- Step 1 – fetch ONLY repos that carry the desired topic
+local function fetchMinecraftRepos()
+  -- Encode the query components (spaces become %20, etc.)
+  local query = string.format("user:%s+topic:%s", USER, TOPIC)
+  local url = API_ROOT .. "/search/repositories?q=" .. query .. "&per_page=100"
+  local result, err = getJSON(url)
+  if not result then error("GitHub search failed: " .. tostring(err)) end
+  -- `items` holds the array of matching repositories
+  return result.items or {}
+end
+
+-----------------------------------------------------------------
+-- Step 2 – menu for picking a repo
+local function chooseRepo(repos)
+  print("\n=== Minecraft‑topic apps (GitHub: " .. USER .. ") ===")
+  for i, r in ipairs(repos) do
+    print(string.format("%2d) %s%s", i, r.name,
+          r.private and " (private)" or ""))
+  end
+  print(" 0) Exit")
+  write("Select an app number: ")
+  local choice = tonumber(read())
+  if not choice or choice < 0 or choice > #repos then
+    print("Invalid choice.")
+    return nil
+  elseif choice == 0 then
+    return nil
+  else
+    return repos[choice]
+  end
+end
+
 -----------------------------------------------------------------
 -- Helper: write a file, creating intermediate directories as needed
 local function writeFile(fullPath, content)
@@ -13,7 +92,7 @@ end
 -- New downloader – respects a manifest (app.json) if present
 local function downloadApp(repo)
   local baseRaw = string.format(
-    "https://raw.githubusercontent.com/%s/%s/main/",
+    "https://raw.githubusercontent.com/%s/%s/master/",
     USER, repo.name)
 
   -- -------------------------------------------------------------
@@ -74,3 +153,25 @@ local function downloadApp(repo)
   writeFile(metaPath, entry)   -- simple one‑line file storing the entry point
   print("✅ " .. repo.name .. " installed. Entry point: " .. entry)
 end
+
+-----------------------------------------------------------------
+-- Main driver
+local function main()
+  local repos = fetchMinecraftRepos()
+  if #repos == 0 then
+    print("No repositories found with the '" .. TOPIC .. "' topic.")
+    return
+  end
+
+  
+  local repo = chooseRepo(repos)
+  if not repo then print("Exiting.") return end
+  local ok, err = pcall(downloadApp, repo)
+  if not ok then print("Error: " .. err) end
+  print("Et voilà !")
+  print("\n---\n")
+  
+end
+
+-----------------------------------------------------------------
+main()
