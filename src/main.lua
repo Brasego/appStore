@@ -109,13 +109,13 @@ local function main()
     return
   end
 
-  while true do
+  
     local repo = chooseRepo(repos)
-    if not repo then break end
+    if not repo then print("Exiting.") return end
     local ok, err = pcall(downloadApp, repo)
     if not ok then print("Error: " .. err) end
     print("\n---\n")
-  end
+  
   print(" Oyoyo!")
 end
 
