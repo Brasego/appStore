@@ -164,7 +164,7 @@ local function ensureInPath(appName)
   end
   local linkPath = binDir .. "/" .. appName
   if not fs.exists(linkPath) then
-    io.open(appName, "w"):write(string.format('shell.run("/apps/%s/.main")\n', appName))
+    io.open(linkPath, "w"):write(string.format('shell.run("/apps/%s/.main")\n', appName))
     print(appName .. "Added to path as " .. linkPath)
   end
 
@@ -182,7 +182,6 @@ local function main()
 
   
   local repo = chooseRepo(repos)
-  print(repo .. "         -------------           " .. repo.name)
   if not repo then print("Exiting.") return end
   local ok, err = pcall(downloadApp, repo)
   if not ok then print("Error: " .. err) end
