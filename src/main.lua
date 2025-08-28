@@ -82,7 +82,7 @@ end
 local function downloadApp(repo)
   -- Adjust this path if your apps store the entry point elsewhere.
   local rawURL = string.format(
-    "https://raw.githubusercontent.com/%s/%s/master/src/main.lua",
+    "https://raw.githubusercontent.com/%s/%s/main/src/main.lua",
     USER, repo.name)
 
   print("Downloading " .. repo.name .. " …")
