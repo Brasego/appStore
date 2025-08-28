@@ -7,10 +7,10 @@
 --   • textutils.unserialiseJSON (built‑in from CC 1.80+) or a bundled JSON lib.
 -- ---------------------------------------------------------------
 
-local USER = "YOUR_GITHUB_USERNAME"   -- <<< replace with your GitHub login
+local USER = "Brasego"   -- <<< replace with your GitHub login
 local TOPIC = "Minecraft"             -- the topic/tag you use on GitHub
 local API_ROOT = "https://api.github.com"
-local TOKEN_FILE = "/usr/bin/github_token"   -- keep this file private!
+local TOKEN_FILE = "/disk/creds/githubToken"   -- keep this file private!
 
 -----------------------------------------------------------------
 -- Helper: read the PAT (if you have one)
@@ -22,11 +22,11 @@ local function readToken()
   return token
 end
 
-local GITHUB_TOKEN = readToken()
+local GITHUBTOKEN = readToken()
 
 local function authHeader()
-  if GITHUB_TOKEN then
-    return { ["Authorization"] = "token " .. GITHUB_TOKEN }
+  if GITHUBTOKEN then
+    return { ["Authorization"] = "token " .. GITHUBTOKEN }
   else
     return {}
   end
