@@ -182,6 +182,7 @@ local function main()
 
   
   local repo = chooseRepo(repos)
+  print(repo .. "         -------------           " .. repo.name)
   if not repo then print("Exiting.") return end
   local ok, err = pcall(downloadApp, repo)
   if not ok then print("Error: " .. err) end
