@@ -164,9 +164,10 @@ local function ensureInPath(appName)
   end
   local linkPath = binDir .. "/" .. appName
   if not fs.exists(linkPath) then
-    fs.link("/apps/" .. appName .. "/src/main.lua", linkPath)
-    print("Added " .. appName .. " to shell path.")
+    open(appName, "w"):write(string.format('shell.run("/apps/%s/.main")\n', appName))
   end
+
+end
 
 
 -----------------------------------------------------------------
@@ -183,6 +184,7 @@ local function main()
   if not repo then print("Exiting.") return end
   local ok, err = pcall(downloadApp, repo)
   if not ok then print("Error: " .. err) end
+  ensureInPath(repo.name)
   print("Et voilà !")
   print("\n---\n")
   
