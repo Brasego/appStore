@@ -158,17 +158,14 @@ end
 -- Path creator: adds the program to the shell path in usr/bin, creates usr/bin if needed
 local function ensureInPath(appName)
   local shellPath = shell.path("/")
-  local binDir = "/rom/programs"
+  local binDir = "/usr/bin"
   if not fs.exists(binDir) then
     fs.makeDir(binDir)
   end
   local linkPath = binDir .. "/" .. appName
   if not fs.exists(linkPath) then
-    local f = io.open(linkPath, "w")
-  if not f then error("Cannot open " .. linkPath .. " for writing") end
-  f:write(string.format('shell.run("/apps/%s/src/main")\n', appName))
-  f:close()
-  print(appName .. " Added to path as " .. linkPath)
+    io.open(linkPath, "w"):write(string.format('shell.run("/apps/%s/src/main")\n', appName))
+    print(appName .. " Added to path as " .. linkPath)
   end
 
 end
