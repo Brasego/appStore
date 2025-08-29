@@ -164,8 +164,11 @@ local function ensureInPath(appName)
   end
   local linkPath = binDir .. "/" .. appName
   if not fs.exists(linkPath) then
-    io.open(linkPath, "w"):write(string.format('shell.run("/apps/%s/src/main")\n', appName))
-    print(appName .. " Added to path as " .. linkPath)
+    local f = io.open(linkPath, "w")
+  if not f then error("Cannot open " .. linkPath .. " for writing") end
+  f:write(string.format('shell.run("/apps/%s/src/main")\n', appName))
+  f:close()
+  print(appName .. " Added to path as " .. linkPath)
   end
 
 end
