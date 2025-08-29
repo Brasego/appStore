@@ -143,7 +143,7 @@ local function downloadApp(repo)
 
     local destPath = destRoot .. "/" .. relPath
     writeFile(destPath, content)
-    print("✓ Saved " .. destPath)
+    print("Saved " .. destPath .. "\n")
   end
 
   -- -------------------------------------------------------------
@@ -151,7 +151,7 @@ local function downloadApp(repo)
   local entry = (manifestData and manifestData.entry) or "src/main.lua"
   local metaPath = destRoot .. "/.meta"
   writeFile(metaPath, entry)   -- simple one‑line file storing the entry point
-  print("✅ " .. repo.name .. " installed. Entry point: " .. entry)
+  print("✅ " .. repo.name .. " installed. \nEntry point: " .. entry .. "\n")
 end
 
 -----------------------------------------------------------------
@@ -186,8 +186,8 @@ local function main()
   local ok, err = pcall(downloadApp, repo)
   if not ok then print("Error: " .. err) end
   ensureInPath(repo.name)
-  print("Et voilà !")
   print("\n---\n")
+  print("Et voilà ! Profitez bieng !")
   
 end
 
