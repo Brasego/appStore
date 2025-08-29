@@ -158,7 +158,7 @@ end
 -- Path creator: adds the program to the shell path in usr/bin, creates usr/bin if needed
 local function ensureInPath(appName)
   local shellPath = shell.path("/")
-  local binDir = "/usr/bin"
+  local binDir = "/rom/programs"
   if not fs.exists(binDir) then
     fs.makeDir(binDir)
   end
